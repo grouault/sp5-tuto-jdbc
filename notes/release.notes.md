@@ -10,5 +10,5 @@
 - mise en place d'un DAO avec abastraction (interface)
   - permet d'isoler le DAO de son implémentation (en JDBC)
 - pas de gestion d'erreur au niveau de l'abstraction pour l'instant
-  - L'implémententeur track les SQLException (Erreur spécifique JDBC)
+  - L'implémenteur track les SQLException (Erreur spécifique JDBC)
     et remonte une simple RuntimeException

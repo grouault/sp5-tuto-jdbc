@@ -40,11 +40,30 @@ public class TestVehiculeDAO {
     }
 
     @Test
+    public void updateVehicule() {
+        Vehicule vehicule = vehiculeDAO.findById(1);
+        Assert.assertNotNull(vehicule);
+        vehicule.setCouleur("rouge");
+        vehiculeDAO.update(vehicule);
+        LOG.info("Test update ok");
+    }
+
+    @Test
     public void findById() {
         Vehicule vehicule = vehiculeDAO.findById(1);
         if (vehicule != null)
             LOG.info(vehicule.toString());
         Assert.assertNotNull(vehicule);
+    }
+
+    @Test
+    public void delete() {
+        Vehicule vehicule = vehiculeDAO.findById(8);
+        if (vehicule == null) {
+            Assert.fail("Impossible de supprimer un véhicule non existant.");
+        }
+        vehiculeDAO.delete(vehicule);
+        LOG.info("Test delete ok");
     }
 
 }

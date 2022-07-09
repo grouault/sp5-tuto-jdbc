@@ -8,8 +8,12 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class JdbcVehiculeDAO implements VehiculeDAO {
+
+    private static final Logger LOG = LogManager.getLogger();
 
     @Override
     public void insert(Vehicule vehicule) {
@@ -37,11 +41,54 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
 
     @Override
     public Vehicule update(Vehicule vehicule) {
-        return null;
+        String sql = "update vehicule " +
+                "set date_immatriculation=?, immatriculation=?, couleur=?, marque=?, modele=? " +
+                "where id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = ConnectionUtil.getInstance().etablirConnexion();
+            ps = conn.prepareStatement(sql);
+            ps.setTimestamp(1, vehicule.getDateImmatricuation());
+            ps.setString(2, vehicule.getImmatriculation());
+            ps.setString(3, vehicule.getCouleur());
+            ps.setString(4, vehicule.getMarque());
+            ps.setString(5, vehicule.getModele());
+            ps.setInt(6, vehicule.getId());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex.getMessage());
+        } finally {
+            try{
+                if (ps != null)
+                    ps.close();
+                ConnectionUtil.getInstance().fermerConnexion();
+            }catch (SQLException ex){}
+        }
+        return vehicule;
     }
 
     @Override
     public void delete(Vehicule vehicule) {
+        String sql = "DELETE FROM vehicule where id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = ConnectionUtil.getInstance().etablirConnexion();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, vehicule.getId());
+            ps.execute();
+        } catch (SQLException ex) {
+            LOG.error(ex.getMessage());
+            throw new RuntimeException(ex.getMessage());
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                ConnectionUtil.getInstance().fermerConnexion();
+            } catch(SQLException ex){}
+        }
 
     }
 
@@ -57,6 +104,7 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
             ResultSet rs = ps.executeQuery();
             if (rs != null && rs.next()) {
                 vehicule = new Vehicule();
+                vehicule.setId(rs.getInt("id"));
                 vehicule.setDateImmatricuation(rs.getTimestamp("date_immatriculation"));
                 vehicule.setImmatriculation(rs.getString("immatriculation"));
                 vehicule.setCouleur(rs.getString("couleur"));
