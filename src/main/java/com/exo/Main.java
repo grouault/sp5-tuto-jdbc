@@ -38,9 +38,13 @@ public final class Main {
 	public static void main(String[] args) {
 		Main.LOG.info("-- Debut -- ");
 
-		VehiculeDAO vehiculeDAO = new JdbcVehiculeDAO();
-
+		ClassPathXmlApplicationContext appContext = null;
 		try {
+
+			// Chargement des fichiers Spring
+			appContext = new ClassPathXmlApplicationContext("spring/*-context.xml");
+
+			VehiculeDAO vehiculeDAO = appContext.getBean("vehiculeDAO", VehiculeDAO.class);
 
 			// Test d'insert.
 			Vehicule vehicule = new Vehicule();
@@ -55,6 +59,11 @@ public final class Main {
 		} catch (Exception e) {
 			Main.LOG.fatal("Erreur", e);
 			System.exit(-1);
+		} finally {
+			// Quoi qu'il arrive fermeture du context Spring
+			if (appContext != null) {
+				appContext.close();
+			}
 		}
 		Main.LOG.info("-- Fin -- ");
 		System.exit(0);

@@ -57,8 +57,8 @@
     <sonar.junit.reportsPath>${basedir}/target/surefire-reports</sonar.junit.reportsPath>
     <sonar.jacoco.reportPaths>${basedir}/target/jacoco.exec</sonar.jacoco.reportPaths>
     <version.mysql>8.0.13</version.mysql>
+    <version.dbcp2>2.1.1</version.dbcp2>
   </properties>
-
 
   <build>
     <plugins>
@@ -194,6 +194,12 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>${version.mysql}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <version>${version.dbcp2}</version>
     </dependency>
 
 

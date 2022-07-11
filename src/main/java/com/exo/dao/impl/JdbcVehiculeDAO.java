@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,13 +16,33 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
 
     private static final Logger LOG = LogManager.getLogger();
 
+    private DataSource dataSource;
+
+    @Override
+    public void truncate() {
+        String sql = "TRUNCATE TABLE vehicule";
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            try {
+                if (!conn.isClosed())
+                    conn.close();
+            } catch (SQLException e){};
+        }
+    }
+
     @Override
     public void insert(Vehicule vehicule) {
         String sql = "INSERT INTO vehicule (date_immatriculation, immatriculation, couleur, marque, modele) " +
                 "VALUES(?, ?, ?, ?, ?);";
         Connection conn = null;
         try {
-            conn = ConnectionUtil.getInstance().etablirConnexion();
+            conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setTimestamp(1, vehicule.getDateImmatricuation());
             ps.setString(2, vehicule.getImmatriculation());
@@ -34,7 +55,8 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
             throw new RuntimeException(e.getMessage());
         } finally {
             try {
-                ConnectionUtil.getInstance().fermerConnexion();
+                if (!conn.isClosed())
+                    conn.close();
             } catch (SQLException e){};
         }
     }
@@ -47,7 +69,7 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
-            conn = ConnectionUtil.getInstance().etablirConnexion();
+            conn = dataSource.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setTimestamp(1, vehicule.getDateImmatricuation());
             ps.setString(2, vehicule.getImmatriculation());
@@ -62,7 +84,9 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
             try{
                 if (ps != null)
                     ps.close();
-                ConnectionUtil.getInstance().fermerConnexion();
+                if (!conn.isClosed()) {
+                    conn.close();
+                };
             }catch (SQLException ex){}
         }
         return vehicule;
@@ -74,7 +98,7 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
-            conn = ConnectionUtil.getInstance().etablirConnexion();
+            conn = dataSource.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setInt(1, vehicule.getId());
             ps.execute();
@@ -86,7 +110,8 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
                 if (ps != null) {
                     ps.close();
                 }
-                ConnectionUtil.getInstance().fermerConnexion();
+                if (!conn.isClosed())
+                    conn.close();
             } catch(SQLException ex){}
         }
 
@@ -95,10 +120,10 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     @Override
     public Vehicule findById(int id) {
         String sql = "Select * from Vehicule where id = ?";
-        Connection conn;
+        Connection conn = null;
         Vehicule vehicule = null;
         try {
-            conn = ConnectionUtil.getInstance().etablirConnexion();
+            conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
@@ -115,10 +140,19 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
             throw new RuntimeException();
         } finally {
             try {
-                ConnectionUtil.getInstance().fermerConnexion();
+                if (!conn.isClosed())
+                    conn.close();
             } catch (SQLException ex) {}
         }
         return vehicule;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
 }
