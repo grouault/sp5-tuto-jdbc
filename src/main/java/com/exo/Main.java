@@ -53,7 +53,7 @@ public final class Main {
 					.setCouleur("rouge")
 					.setMarque("Peugeot")
 					.setModele("3007");
-			vehiculeDAO.insert(vehicule);
+			vehiculeDAO.insertWithParameter(vehicule);
 			Main.LOG.info("Véhicule inséré");
 
 		} catch (Exception e) {
