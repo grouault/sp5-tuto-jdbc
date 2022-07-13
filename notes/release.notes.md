@@ -25,3 +25,6 @@
 ### requete Select - Update
 - mise en place des requetes update
 - mise en place des requetes select
+
+### spring - défnition jdbcTemplate
+- injection jdbcTemplate dans le DAO

@@ -25,29 +25,16 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    private DataSource dataSource;
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public void truncate() {
         String sql = "TRUNCATE TABLE vehicule";
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
-        } finally {
-            try {
-                if (!conn.isClosed())
-                    conn.close();
-            } catch (SQLException e){};
-        }
+        jdbcTemplate.update(sql);
     }
 
     @Override
     public void insertWithPreparedStatementCreator(Vehicule vehicule) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
@@ -69,8 +56,6 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
 
         String sql = "INSERT INTO vehicule (date_immatriculation, immatriculation, couleur, marque, modele) " +
             "VALUES(?, ?, ?, ?, ?);";
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(sql, new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
@@ -88,7 +73,6 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     public void insertWithParameter(Vehicule vehicule) {
         String sql = "INSERT INTO vehicule (date_immatriculation, immatriculation, couleur, marque, modele) " +
                 "VALUES(?, ?, ?, ?, ?);";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(sql, new Object[]{
            vehicule.getDateImmatricuation(),
            vehicule.getImmatriculation(),
@@ -103,7 +87,6 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
         String sql = "update vehicule " +
                 "set date_immatriculation=?, immatriculation=?, couleur=?, marque=?, modele=? " +
                 "where id = ?";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(sql, new Object[]{
               vehicule.getDateImmatricuation(), vehicule.getImmatriculation(),
               vehicule.getCouleur(), vehicule.getMarque(), vehicule.getModele(), vehicule.getId()
@@ -114,14 +97,12 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     @Override
     public void delete(Vehicule vehicule) {
         String sql = "DELETE FROM vehicule where id = ?";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(sql, new Object[]{ vehicule.getId() });
     }
 
     @Override
     public Vehicule findById_withRowCallBackHandler(int id) {
         String sql = "Select * from Vehicule where id = ?";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         final Vehicule vehicule = new Vehicule();
         jdbcTemplate.query(sql, new Object[] {id}, new RowCallbackHandler() {
             @Override
@@ -140,7 +121,6 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     @Override
     public Vehicule findById_withRowMapper(int id) {
         String sql = "Select * from Vehicule where id = ?";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         final Vehicule vehicule = (Vehicule) jdbcTemplate.queryForObject(sql, new Object[]{id}, new VehiculeRowMapper());
         return vehicule;
     }
@@ -149,7 +129,6 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     public List<Vehicule> findAll_withQueryList() {
         String sql = "Select * from Vehicule";
         List<Vehicule> vehicules = new ArrayList<Vehicule>();
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
         if (rows != null && !rows.isEmpty()) {
             for (Map<String, Object> row : rows) {
@@ -169,7 +148,6 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     @Override
     public List<Vehicule> findAll_withQueryRowMapper() {
         String sql = "Select * from Vehicule";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         List<Vehicule> vehicules = jdbcTemplate.query(sql, new VehiculeRowMapper());
         return vehicules;
     }
@@ -178,7 +156,6 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     public List<Vehicule> findByMarque_withRowCallBackHandler(String marque) {
         String sql = "Select * from Vehicule where marque = ?";
         List<Vehicule> vehicules = new ArrayList<>();
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.query(sql, new Object[]{marque}, new RowCallbackHandler() {
             @Override
             public void processRow(ResultSet rs) throws SQLException {
@@ -198,14 +175,12 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     @Override
     public List<Vehicule> findByMarque_withQueryRowMapper(String marque) {
         String sql = "Select * from Vehicule where marque = ?";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         List<Vehicule> vehicules = jdbcTemplate.query(sql, new Object[]{marque}, new VehiculeRowMapper());
         return vehicules;
     }
 
     @Override
     public void insertBatch(List<Vehicule> vehicules) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         String sql = "INSERT INTO vehicule (date_immatriculation, immatriculation, couleur, marque, modele) " +
                 "VALUES(?, ?, ?, ?, ?);";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
@@ -229,7 +204,6 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     @Override
     public String getColor(int id) {
         String sql = "Select couleur from Vehicule where id=?";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         String color = jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
         return color;
     }
@@ -237,17 +211,17 @@ public class JdbcVehiculeDAO implements VehiculeDAO {
     @Override
     public int countAll() {
         String sql = "Select count(*) from Vehicule";
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         int count = jdbcTemplate.queryForObject(sql, Integer.class);
         return count;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
     }
 
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public JdbcVehiculeDAO setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        return this;
     }
 
 }
