@@ -25,13 +25,10 @@
     </bean>
 
     <!-- spring jdbc -->
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
 
     <!-- DAO -->
     <bean id="vehiculeDAO" class="com.exo.dao.impl.JdbcVehiculeDAO">
-        <property name="jdbcTemplate" ref="jdbcTemplate" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
 
 </beans>

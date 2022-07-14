@@ -23,8 +23,13 @@
   - truncate sur véhicule
 
 ### requete Select - Update
-- mise en place des requetes update
+- mise en place des requetes update 
 - mise en place des requetes select
 
 ### spring - défnition jdbcTemplate
 - injection jdbcTemplate dans le DAO
+
+### spring - jdbcDaoSupport et getJdbcTemplate
+- injection de la dataSource dans les DAOs
+- chaque dao hérite de la classe Spring : jdbcDaoSupport
+- utilisation de la classe getJdbcTemplate()
