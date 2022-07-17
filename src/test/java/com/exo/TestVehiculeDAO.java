@@ -74,14 +74,14 @@ public class TestVehiculeDAO {
                 .setImmatriculation("MOP-66-EE")
                 .setDateImmatricuation(new Timestamp(Calendar.getInstance().getTimeInMillis()))
                 .setCouleur("rouge").setModele("clio").setMarque("Renault");
-        vehiculeDAO.insertBatch(Arrays.asList(new Vehicule[]{vehicule1, vehicule2}));
+        vehiculeDAO.insertBatch_NameParameter(Arrays.asList(new Vehicule[]{vehicule1, vehicule2}));
     }
 
     @Test
     public void b01_updateVehicule() {
         LOG.info("Test update Vehicule");
         Vehicule vehicule = vehiculeDAO.findById_withRowCallBackHandler(1);
-        if (vehicule == null) {
+        if (vehicule == null || vehicule.getId() == 0) {
             vehiculeDAO.insertWithParameter(vehiculeTest);
             LOG.info("insertion du véhicule");
         }
@@ -96,12 +96,12 @@ public class TestVehiculeDAO {
         LOG.info("Test find Vehicule by id");
         Vehicule vehicule = null;
         try {
-            vehicule = vehiculeDAO.findById_withRowMapper(1);
+            vehicule = vehiculeDAO.findById_withRowCallBackHandler(1);
         } catch(EmptyResultDataAccessException ex) {
             vehiculeDAO.insertWithParameter(vehiculeTest);
             LOG.info("insertion du véhicule");
         }
-        vehicule = vehiculeDAO.findById_withRowMapper(1);
+        vehicule = vehiculeDAO.findById_withRowCallBackHandler(1);
         LOG.info(vehicule.toString());
         Assert.assertNotNull(vehicule);
     }

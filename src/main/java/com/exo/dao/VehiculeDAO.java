@@ -31,6 +31,8 @@ public interface VehiculeDAO {
 
     void insertBatch(List<Vehicule> vehicules);
 
+    void insertBatch_NameParameter(List<Vehicule> vehicules);
+
     String getColor(int id);
 
     int countAll();

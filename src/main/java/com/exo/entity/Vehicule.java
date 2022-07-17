@@ -7,7 +7,7 @@ public class Vehicule {
 
     private int id;
 
-    private Timestamp dateImmatricuation;
+    private Timestamp dateImmatriculation;
 
     private String immatriculation;
 
@@ -26,12 +26,12 @@ public class Vehicule {
         return this;
     }
 
-    public Timestamp getDateImmatricuation() {
-        return dateImmatricuation;
+    public Timestamp getDateImmatriculation() {
+        return dateImmatriculation;
     }
 
-    public Vehicule setDateImmatricuation(Timestamp dateImmatricuation) {
-        this.dateImmatricuation = dateImmatricuation;
+    public Vehicule setDateImmatricuation(Timestamp dateImmatriculation) {
+        this.dateImmatriculation = dateImmatriculation;
         return this;
     }
 
@@ -75,7 +75,7 @@ public class Vehicule {
     public String toString() {
         return new StringJoiner(", ", Vehicule.class.getSimpleName() + "[", "]")
                 .add("id=" + id)
-                .add("dateImmatricuation=" + dateImmatricuation)
+                .add("dateImmatricuation=" + dateImmatriculation)
                 .add("immatriculation='" + immatriculation + "'")
                 .add("couleur='" + couleur + "'")
                 .add("marque='" + marque + "'")

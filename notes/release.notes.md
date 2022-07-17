@@ -33,3 +33,7 @@
 - injection de la dataSource dans les DAOs
 - chaque dao hérite de la classe Spring : jdbcDaoSupport
 - utilisation de la classe getJdbcTemplate()
+
+### spring - NamedParameterJdbcDaoSupport
+- chaque dao hérite de la classe Spring : NamedParameterJdbcDaoSupport
+- utilisation de getNamedParameterJdbcTemplate() pour les paramètres nommés
