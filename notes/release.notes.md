@@ -42,3 +42,9 @@
 - test en erreur 
 - main : exécution en erreur
 - dataSource: configuration Pool
+
+### transaction : initialisation
+- mise en place projet BookShop 
+- ajout d'une nouvelle base de données
+- main sans transaction : en mode autocommit
+  - dans le main, une exception est levée et pas de rollback opéré

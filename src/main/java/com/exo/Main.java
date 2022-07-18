@@ -1,5 +1,6 @@
 package com.exo;
 
+import com.exo.dao.BookShopDAO;
 import com.exo.dao.VehiculeDAO;
 import com.exo.dao.impl.JdbcVehiculeDAO;
 import com.exo.entity.Vehicule;
@@ -46,24 +47,12 @@ public final class Main {
 			// Chargement des fichiers Spring
 			appContext = new ClassPathXmlApplicationContext("spring/*-context.xml");
 
-			VehiculeDAO vehiculeDAO = appContext.getBean("vehiculeDAO", VehiculeDAO.class);
+			BookShopDAO bookShopDAO = appContext.getBean("bookShopDAO", BookShopDAO.class);
+			bookShopDAO.purchase("D7G 7T9","gildas");
 
-			// Test d'insert.
-			Vehicule vehicule = new Vehicule();
-			vehicule.setDateImmatricuation(new Timestamp(Calendar.getInstance().getTimeInMillis()))
-					.setImmatriculation("405-PM-78")
-					.setCouleur("rouge")
-					.setMarque("Peugeot")
-					.setModele("3007").setId(1);
-			vehiculeDAO.insertWithParameter(vehicule);
-			Main.LOG.info("Véhicule inséré");
+			Main.LOG.info("-- Fin --");
 
-			vehiculeDAO.insertWithParameter(vehicule);
-			Main.LOG.info("Véhicule inséré");
-		} catch (DataAccessException dae) {
-			SQLException sqle = (SQLException) dae.getCause();
-			System.out.println("Code d'erreur : " + sqle.getErrorCode());
-			System.out.println("Etat SQL : " + sqle.getSQLState());
+
 		} catch (Exception e) {
 			Main.LOG.fatal("Erreur", e);
 			System.exit(-1);
