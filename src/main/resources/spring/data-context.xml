@@ -48,6 +48,7 @@
 
     <bean id="bookShopDAO" class="com.exo.dao.impl.BookShopJdbcDAO">
         <property name="dataSource" ref="dsBookShop" />
+        <property name="transactionManager" ref="txManagerBookShop" />
     </bean>
 
 </beans>
