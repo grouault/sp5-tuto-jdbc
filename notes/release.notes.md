@@ -1,5 +1,11 @@
 ## spring.jdbc
 
+### transaction : par programmation avec un template de transaction
+- évite de répéter le code standard
+  - plus de try/catch : erreur géré par le template
+  - commit et rollback géré automatiquement par le template
+  
+
 ### transaction : par programmation avec l'API du gestionnaire de Transaction
 - mise en place de JdbcTemplate et de JdbcDaoSupport
   - plus de gestion de la connexion
