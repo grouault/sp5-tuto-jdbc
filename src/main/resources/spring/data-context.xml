@@ -22,6 +22,8 @@
         <property name="url" value="${db.url}" />
         <property name="username" value="${db.login}" />
         <property name="password" value="${db.password}" />
+        <property name="initialSize" value="2" />
+        <property name="maxIdle" value="5" />
     </bean>
 
     <!-- spring jdbc -->

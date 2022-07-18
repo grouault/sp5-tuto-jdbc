@@ -79,8 +79,8 @@ public class JdbcVehiculeDAO extends NamedParameterJdbcDaoSupport implements Veh
 
     @Override
     public void insertWithParameter(Vehicule vehicule) {
-        String sql = "INSERT INTO vehicule (date_immatriculation, immatriculation, couleur, marque, modele) " +
-                "VALUES(:dateImmatriculation, :immatriculation, :couleur, :marque, :modele);";
+        String sql = "INSERT INTO vehicule (id, date_immatriculation, immatriculation, couleur, marque, modele) " +
+                "VALUES(:id, :dateImmatriculation, :immatriculation, :couleur, :marque, :modele);";
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(vehicule);
         getNamedParameterJdbcTemplate().update(sql, parameterSource);
     }
@@ -132,7 +132,7 @@ public class JdbcVehiculeDAO extends NamedParameterJdbcDaoSupport implements Veh
     @Override
     public Vehicule findById_withRowMapper(int id) {
         String sql = "Select * from Vehicule where id = ?";
-        final Vehicule vehicule = (Vehicule) getJdbcTemplate().queryForObject(sql, new Object[]{id}, new VehiculeRowMapper());
+        Vehicule vehicule = (Vehicule) getJdbcTemplate().queryForObject(sql, new VehiculeRowMapper(), id);
         return vehicule;
     }
 

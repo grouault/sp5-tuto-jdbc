@@ -6,6 +6,7 @@ import com.exo.entity.Vehicule;
 import com.exo.utils.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.DataAccessException;
 
 /**
  * Exemple.
@@ -52,10 +54,16 @@ public final class Main {
 					.setImmatriculation("405-PM-78")
 					.setCouleur("rouge")
 					.setMarque("Peugeot")
-					.setModele("3007");
+					.setModele("3007").setId(1);
 			vehiculeDAO.insertWithParameter(vehicule);
 			Main.LOG.info("Véhicule inséré");
 
+			vehiculeDAO.insertWithParameter(vehicule);
+			Main.LOG.info("Véhicule inséré");
+		} catch (DataAccessException dae) {
+			SQLException sqle = (SQLException) dae.getCause();
+			System.out.println("Code d'erreur : " + sqle.getErrorCode());
+			System.out.println("Etat SQL : " + sqle.getSQLState());
 		} catch (Exception e) {
 			Main.LOG.fatal("Erreur", e);
 			System.exit(-1);

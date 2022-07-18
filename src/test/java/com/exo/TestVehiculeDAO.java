@@ -3,6 +3,7 @@ package com.exo;
 import com.exo.dao.VehiculeDAO;
 import com.exo.dao.impl.JdbcVehiculeDAO;
 import com.exo.entity.Vehicule;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.junit.runners.Suite;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -43,6 +45,7 @@ public class TestVehiculeDAO {
         LOG.info("startup - TRUNCATE Vehicule");
         // creation du vehicule de test
         vehiculeTest = new Vehicule();
+        vehiculeTest.setId(1);
         vehiculeTest.setDateImmatricuation(new Timestamp(Calendar.getInstance().getTimeInMillis()));
         vehiculeTest.setImmatriculation("998-TE-98");
         vehiculeTest.setModele("Clio").setMarque("Renault").setCouleur("bleu");
@@ -78,6 +81,27 @@ public class TestVehiculeDAO {
     }
 
     @Test
+    public void a03_insertVehicule_fail() {
+        LOG.info("Test insertion véhicule en double");
+          try {
+            Vehicule vehicule1 = new Vehicule()
+                    .setId(1)
+                    .setImmatriculation("MOP-65-EE")
+                    .setDateImmatricuation(new Timestamp(Calendar.getInstance().getTimeInMillis()))
+                    .setCouleur("rouge").setModele("clio").setMarque("Renault");
+            vehiculeDAO.insertWithParameter(vehicule1);
+            vehiculeDAO.insertWithParameter(vehicule1);
+            Assert.fail("Le test aurait dû provoquer une exception de contrainte d'intégrité");
+          } catch (DataAccessException ex) {
+              LOG.info("exception declenchée : "+ ex.getClass());
+              LOG.info("message : " + ex.getMessage());
+              SQLException sqle = (SQLException) ex.getCause();
+              LOG.info("Etat SQL : " + sqle.getSQLState());
+              LOG.info("Code erreur SQL : " + sqle.getErrorCode());
+          }
+    }
+
+    @Test
     public void b01_updateVehicule() {
         LOG.info("Test update Vehicule");
         Vehicule vehicule = vehiculeDAO.findById_withRowCallBackHandler(1);
@@ -96,12 +120,12 @@ public class TestVehiculeDAO {
         LOG.info("Test find Vehicule by id");
         Vehicule vehicule = null;
         try {
-            vehicule = vehiculeDAO.findById_withRowCallBackHandler(1);
+            vehicule = vehiculeDAO.findById_withRowMapper(1);
         } catch(EmptyResultDataAccessException ex) {
             vehiculeDAO.insertWithParameter(vehiculeTest);
             LOG.info("insertion du véhicule");
         }
-        vehicule = vehiculeDAO.findById_withRowCallBackHandler(1);
+        vehicule = vehiculeDAO.findById_withRowMapper(1);
         LOG.info(vehicule.toString());
         Assert.assertNotNull(vehicule);
     }

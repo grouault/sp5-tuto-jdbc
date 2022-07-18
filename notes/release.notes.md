@@ -37,3 +37,8 @@
 ### spring - NamedParameterJdbcDaoSupport
 - chaque dao hérite de la classe Spring : NamedParameterJdbcDaoSupport
 - utilisation de getNamedParameterJdbcTemplate() pour les paramètres nommés
+
+### exception : ajout test insertion en erreur
+- test en erreur 
+- main : exécution en erreur
+- dataSource: configuration Pool
