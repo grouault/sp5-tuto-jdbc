@@ -48,3 +48,7 @@
 - ajout d'une nouvelle base de données
 - main sans transaction : en mode autocommit
   - dans le main, une exception est levée et pas de rollback opéré
+
+### transaction : jdbc avec mise en place du rollback
+- désactivation de la gestion automatique des transactions
+- mise en place du commit / rollback

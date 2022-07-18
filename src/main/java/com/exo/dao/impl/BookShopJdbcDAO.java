@@ -25,6 +25,7 @@ public class BookShopJdbcDAO implements BookShopDAO {
         try {
 
             conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
 
             // recuperation du prix du livre
             PreparedStatement stmt1 = conn.prepareStatement("SELECT PRICE FROM BOOK WHERE ISBN = ?");
@@ -47,7 +48,14 @@ public class BookShopJdbcDAO implements BookShopDAO {
             stmt3.executeUpdate();
             stmt3.close();
 
+            conn.commit();
+
         } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {}
+            }
             throw new RuntimeException(e);
         } finally {
             if (conn != null) {
