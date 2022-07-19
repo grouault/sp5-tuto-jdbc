@@ -1,5 +1,13 @@
 ## spring.jdbc
 
+
+### transaction : par déclaration avec Spring AOP Classique
+- pour Spring 1.0
+- création d'un proxy sur BookShop
+- création d'un greffon attaché au proxy
+- plus de code programmatique dans le DAO
+- a l'exécution, attention a bien recupéré le proxy
+
 ### transaction : par programmation avec un template de transaction
 - évite de répéter le code standard
   - plus de try/catch : erreur géré par le template

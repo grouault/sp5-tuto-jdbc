@@ -41,6 +41,17 @@
         <property name="dataSource" ref="dsBookShop" />
     </bean>
 
+    <!-- proxy + greffon -->
+    <bean id="bookShopProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="target" ref="bookShopDAO" />
+        <property name="transactionManager" ref="txManagerBookShop" />
+        <property name="transactionAttributes">
+            <props>
+                <prop key="purchase">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
     <!-- DAO -->
     <bean id="vehiculeDAO" class="com.exo.dao.impl.JdbcVehiculeDAO">
         <property name="dataSource" ref="dataSource" />
@@ -48,7 +59,8 @@
 
     <bean id="bookShopDAO" class="com.exo.dao.impl.BookShopJdbcDAO">
         <property name="dataSource" ref="dsBookShop" />
-        <property name="transactionManager" ref="txManagerBookShop" />
     </bean>
+
+
 
 </beans>

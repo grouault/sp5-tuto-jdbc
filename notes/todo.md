@@ -2,4 +2,7 @@
 
 ### Unicité
 - Véhicule : ajouter l'unicité sur l'immatriculation.
-- faire le test de l'exception non unique
+
+### Question
+- Comment paramétrer un template de transaction ?
+  - avec les propriétés : isolation...
