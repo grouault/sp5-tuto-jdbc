@@ -16,6 +16,10 @@
     <!-- Chargement du fichier de properties dans le contexte Spring -->
     <context:property-placeholder location="classpath:spring/database.properties" />
 
+    <!-- Annotation -->
+    <context:component-scan base-package="com.exo.dao.impl" />
+    <tx:annotation-driven transaction-manager="txManagerBookShop" />
+
     <!-- Declaration dataSource Entreprise -->
     <bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="${db.driver}" />
@@ -36,29 +40,6 @@
         <property name="maxIdle" value="5" />
     </bean>
 
-
-    <!-- /////////////////////////////////////////////////// -->
-    <!-- AOP Classique                                       -->
-    <!-- - declaration avec greffon transactionnel           -->
-    <!-- /////////////////////////////////////////////////// -->
-
-    <!-- //////// -->
-    <!-- GREFFONs -->
-    <!-- //////// -->
-    <tx:advice id="bookShopTxAdvice" transaction-manager="txManagerBookShop">
-        <tx:attributes>
-            <tx:method name="purchase" />
-        </tx:attributes>
-    </tx:advice>
-
-    <!-- /////////////// -->
-    <!-- POINTs DE COUPE -->
-    <!-- /////////////// -->
-    <!-- bookServiceOperation -->
-    <aop:config>
-        <aop:pointcut id="bookShopOperation" expression="execution(* com.exo.dao.impl.BookShopJdbcDAO.*(..))" />
-        <aop:advisor advice-ref="bookShopTxAdvice" pointcut-ref="bookShopOperation"/>
-    </aop:config>
 
     <!-- transaction-manager -->
     <bean id="txManagerBookShop" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

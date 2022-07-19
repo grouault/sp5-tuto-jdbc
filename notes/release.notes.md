@@ -1,5 +1,10 @@
 ## spring.jdbc
 
+### transaction : par déclaration avec l'annotation @Transactional
+- IMPORTANT : configuration des annotations dans la conf
+  <context:component-scan base-package="com.exo.dao.impl" />
+  <tx:annotation-driven transaction-manager="txManagerBookShop" />
+
 ### transaction : par déclaration avec des greffons transactionnels
 - pour Spring 2.x
 - modification du schema <beans ... />
@@ -19,7 +24,6 @@
   - plus de try/catch : erreur géré par le template
   - commit et rollback géré automatiquement par le template
   
-
 ### transaction : par programmation avec l'API du gestionnaire de Transaction
 - mise en place de JdbcTemplate et de JdbcDaoSupport
   - plus de gestion de la connexion
