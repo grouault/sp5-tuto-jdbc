@@ -47,7 +47,7 @@ public final class Main {
 			// Chargement des fichiers Spring
 			appContext = new ClassPathXmlApplicationContext("spring/*-context.xml");
 
-			BookShopDAO bookShopDAO = appContext.getBean("bookShopProxy", BookShopDAO.class);
+			BookShopDAO bookShopDAO = appContext.getBean("bookShopDAO", BookShopDAO.class);
 			bookShopDAO.purchase("D7G 7T9","gildas");
 
 			Main.LOG.info("-- Fin --");

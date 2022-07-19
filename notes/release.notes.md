@@ -1,8 +1,14 @@
 ## spring.jdbc
 
+### transaction : par déclaration avec des greffons transactionnels
+- pour Spring 2.x
+- modification du schema <beans ... />
+- plus de proxy explicit
+- greffon associé à un point d'action
+- ATTENTION : il faut importer la dépendance ASPECTJ
 
 ### transaction : par déclaration avec Spring AOP Classique
-- pour Spring 1.0
+- pour Spring 1.x
 - création d'un proxy sur BookShop
 - création d'un greffon attaché au proxy
 - plus de code programmatique dans le DAO
