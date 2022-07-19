@@ -1,5 +1,10 @@
 ## spring.jdbc
 
+
+### transaction : fixer l'attribut de propagation
+- créer une interface cashier qui permet de faire plusieurs achats de livre
+- chaque achat s'opère dans sa propre transaction
+
 ### transaction : par déclaration avec l'annotation @Transactional
 - IMPORTANT : configuration des annotations dans la conf
   <context:component-scan base-package="com.exo.dao.impl" />

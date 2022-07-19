@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 public class BookShopJdbcDAO extends NamedParameterJdbcDaoSupport implements BookShopDAO {
@@ -13,7 +14,7 @@ public class BookShopJdbcDAO extends NamedParameterJdbcDaoSupport implements Boo
     private static final Logger LOG = LogManager.getLogger();
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void purchase(String isbn, String username) {
 
         // recuperation du prix du livre

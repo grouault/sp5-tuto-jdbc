@@ -55,4 +55,8 @@
         <property name="dataSource" ref="dsBookShop" />
     </bean>
 
+    <bean id="cashier" class="com.exo.service.impl.BookShopCashier">
+        <property name="bookShopDAO" ref="bookShopDAO" />
+    </bean>
+
 </beans>
