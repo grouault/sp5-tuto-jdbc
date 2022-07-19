@@ -1,5 +1,11 @@
 ## spring.jdbc
 
+
+### transaction : fixer l'attribut d'isolation : REPEATABLE_READ
+- les threads sont inversés
+- en READ_COMMITTED sur check_stock : l'autre Transaction accède en modif.
+- en REPEATABLE_READ sur check_stock : l'autre Transaction ne peut modifier le stock
+
 ### transaction : fixer l'attribut d'isolation : READ_COMMITED
 - cas de test d'accès concurrent en READ_COMMITTED et READ_UNCOMMITED
 - En READ_UNCOMMITED : on accède à la valeur modifiée et non encore validée

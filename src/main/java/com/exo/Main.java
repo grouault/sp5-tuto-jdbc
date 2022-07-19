@@ -55,7 +55,7 @@ public final class Main {
 				@Override
 				public void run() {
 					try {
-						bookShopDAO.increaseStock("D7G 7T9",50);
+						bookShopDAO.checkStock("D7G 7T9");
 					} catch (RuntimeException e){}
 				}
 			}, "thread 1");
@@ -64,7 +64,7 @@ public final class Main {
 				@Override
 				public void run() {
 					try {
-						bookShopDAO.checkStock("D7G 7T9");
+						bookShopDAO.increaseStock("D7G 7T9",50);
 					} catch (RuntimeException e){}
 				}
 			}, "thread 2");

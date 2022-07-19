@@ -59,9 +59,8 @@ public class BookShopJdbcDAO extends NamedParameterJdbcDaoSupport implements Boo
 
     }
 
-
     @Override
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public int checkStock(String isbn) {
         String threadName = Thread.currentThread().getName();
         LOG.info(" {} - prêt à vérifier le stock du livre", threadName);
@@ -74,7 +73,8 @@ public class BookShopJdbcDAO extends NamedParameterJdbcDaoSupport implements Boo
         LOG.info("{} - Le stock du livre est de : {}", threadName, stock);
 
         sleep(threadName);
-
+        stock = getNamedParameterJdbcTemplate().queryForObject(sql, parameters, Integer.class);
+        LOG.info("{} - Le stock du livre après relecture est de : {}", threadName, stock);
         return stock;
     }
 
