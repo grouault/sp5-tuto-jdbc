@@ -49,13 +49,31 @@ public final class Main {
 			// Chargement des fichiers Spring
 			appContext = new ClassPathXmlApplicationContext("spring/*-context.xml");
 
-			CashierService cashier = appContext.getBean("cashier", CashierService.class);
+			BookShopDAO bookShopDAO = appContext.getBean("bookShopDAO", BookShopDAO.class);
 
-			List<String> isbns = Arrays.asList(new String[]{"D7G 7T9","G4G 8O4"});
-			cashier.checkout(isbns, "gildas");
+			Thread thread1 = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						bookShopDAO.increaseStock("D7G 7T9",50);
+					} catch (RuntimeException e){}
+				}
+			}, "thread 1");
 
-			Main.LOG.info("-- Fin --");
+			Thread thread2 = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						bookShopDAO.checkStock("D7G 7T9");
+					} catch (RuntimeException e){}
+				}
+			}, "thread 2");
 
+			thread1.start();
+			try{
+				Thread.sleep(5000);
+			} catch (InterruptedException ex){}
+			thread2.start();
 
 		} catch (Exception e) {
 			Main.LOG.fatal("Erreur", e);
@@ -63,10 +81,10 @@ public final class Main {
 		} finally {
 			// Quoi qu'il arrive fermeture du context Spring
 			if (appContext != null) {
-				appContext.close();
+			 	appContext.close();
 			}
 		}
 		Main.LOG.info("-- Fin -- ");
-		System.exit(0);
+		// System.exit(0);
 	}
 }

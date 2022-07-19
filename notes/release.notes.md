@@ -1,5 +1,8 @@
 ## spring.jdbc
 
+### transaction : fixer l'attribut d'isolation : READ_COMMITED
+- cas de test d'accès concurrent en READ_COMMITTED et READ_UNCOMMITED
+- En READ_UNCOMMITED : on accède à la valeur modifiée et non encore validée
 
 ### transaction : fixer l'attribut de propagation
 - créer une interface cashier qui permet de faire plusieurs achats de livre
